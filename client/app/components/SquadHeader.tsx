@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router';
 
 export default function SquadHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const location = useLocation();
+  const isGeneratePage = location.pathname === '/generate';
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -12,10 +15,10 @@ export default function SquadHeader() {
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
@@ -165,14 +168,12 @@ export default function SquadHeader() {
             S
           </div>
 
-          <h1 className="hidden text-xl font-black tracking-tight sm:block">
-            SquadHub
-          </h1>
+          <h1 className="hidden text-xl font-black tracking-tight sm:block">SquadHub</h1>
         </Link>
 
-        {/* RIGHT - GENERATE TEAMS */}
+        {/* RIGHT - PAGE NAVIGATION */}
         <Link
-          to="/generate"
+          to={isGeneratePage ? '/' : '/generate'}
           className="
             group relative z-20
             ml-auto flex items-center gap-2.5
@@ -200,31 +201,60 @@ export default function SquadHeader() {
             "
           />
 
-          {/* SHUFFLE ICON */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="
-              relative z-10 h-4 w-4
-              transition-transform duration-300
-              group-hover:rotate-12
-            "
-          >
-            <path d="m18 14 4 4-4 4" />
-            <path d="m18 2 4 4-4 4" />
-            <path d="M2 18h1.5a6 6 0 0 0 5-2.7L15.5 4.7A6 6 0 0 1 20.5 2H22" />
-            <path d="M2 6h1.5a6 6 0 0 1 5 2.7l1.2 1.8" />
-            <path d="M14.5 15.3l1 1.5a6 6 0 0 0 5 2.7H22" />
-          </svg>
+          {isGeneratePage ? (
+            <>
+              {/* BACK / ROSTER ICON */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="
+                  relative z-10 h-4 w-4
+                  transition-transform duration-300
+                  group-hover:-translate-x-0.5
+                "
+              >
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
 
-          <span className="relative z-10 hidden sm:inline">Generate Teams</span>
+              <span className="relative z-10 hidden sm:inline">Back</span>
 
-          <span className="relative z-10 sm:hidden">Generate</span>
+              <span className="relative z-10 sm:hidden">Roster</span>
+            </>
+          ) : (
+            <>
+              {/* SHUFFLE ICON */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="
+                  relative z-10 h-4 w-4
+                  transition-transform duration-300
+                  group-hover:rotate-12
+                "
+              >
+                <path d="m18 14 4 4-4 4" />
+                <path d="m18 2 4 4-4 4" />
+                <path d="M2 18h1.5a6 6 0 0 0 5-2.7L15.5 4.7A6 6 0 0 1 20.5 2H22" />
+                <path d="M2 6h1.5a6 6 0 0 1 5 2.7l1.2 1.8" />
+                <path d="M14.5 15.3l1 1.5a6 6 0 0 0 5 2.7H22" />
+              </svg>
+
+              <span className="relative z-10 hidden sm:inline">Generate Teams</span>
+
+              <span className="relative z-10 sm:hidden">Generate</span>
+            </>
+          )}
         </Link>
       </div>
     </header>

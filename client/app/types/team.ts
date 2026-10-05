@@ -1,12 +1,8 @@
-export type TeamPlayer = {
-  id: number;
-  name: string;
-  rating: number;
-};
+import type { Player } from './player';
 
 export type Team = {
   id: number;
   totalRating: number;
   averageRating: number;
-  players: TeamPlayer[];
+  players: Player[];
 };

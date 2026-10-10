@@ -19,3 +19,22 @@ Content-Type: application/json
 {
   "playerIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 }
+
+### Register
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "Alex",
+  "email": "alex123@example.com",
+  "password": "password123"
+}
+
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "alex@example.com",
+  "password": "password123"
+}

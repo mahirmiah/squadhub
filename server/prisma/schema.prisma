@@ -5,20 +5,32 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
 enum Position {
   ATT
   MID
   DEF
 }
 
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  passwordHash String
+
+  player Player?
+}
+
 model Player {
-  id      Int    @id @default(autoincrement())
-  name    String
-  rating Int @default(50)
+  id       Int      @id @default(autoincrement())
+  userId   Int?     @unique
+  name     String
+  rating   Int      @default(50)
   position Position @default(MID)
 
+  user User? @relation(fields: [userId], references: [id])
+
   generatedTeams GeneratedTeam[]
-  ratingHistory  RatingHistory[]
+  ratingHistory RatingHistory[]
 }
 
 model GeneratedTeam {
@@ -32,7 +44,7 @@ model GeneratedTeam {
 }
 
 model Match {
-  id           Int      @id @default(autoincrement())
+  id           Int @id @default(autoincrement())
   teamAId      Int
   teamBId      Int
   winnerTeamId Int

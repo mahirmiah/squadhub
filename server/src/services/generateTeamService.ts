@@ -9,6 +9,13 @@ export async function generateTeams(playerIds: number[]): Promise<[GeneratedTeam
         in: playerIds,
       },
     },
+    select: {
+      id: true,
+      userId: true,
+      name: true,
+      rating: true,
+      position: true,
+    },
   });
 
   if (players.some((player) => player.rating === null)) {

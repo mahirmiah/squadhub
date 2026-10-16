@@ -1,15 +1,13 @@
-import bcrypt from "bcrypt";
-import { prisma } from "../db/prisma";
+import bcrypt from 'bcrypt';
+import { prisma } from '../db/prisma';
 
 export async function register(name: string, email: string, password: string) {
   const existingUser = await prisma.user.findUnique({
-    where: {
-      email,
-    },
+    where: { email },
   });
 
   if (existingUser) {
-    throw new Error("A user with this email already exists.");
+    throw new Error('A user with this email already exists.');
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -19,9 +17,7 @@ export async function register(name: string, email: string, password: string) {
       email,
       passwordHash,
       player: {
-        create: {
-          name,
-        },
+        create: { name },
       },
     },
     include: {
@@ -38,8 +34,39 @@ export async function register(name: string, email: string, password: string) {
 
 export async function login(email: string, password: string) {
   const user = await prisma.user.findUnique({
+    where: { email },
+    include: {
+      player: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error('Invalid email or password.');
+  }
+
+  const passwordMatches = await bcrypt.compare(password, user.passwordHash);
+
+  if (!passwordMatches) {
+    throw new Error('Invalid email or password.');
+  }
+
+  return {
+    id: user.id,
+    email: user.email,
+    player: user.player,
+  };
+}
+
+export async function getCurrentUser(userId: string) {
+  const id = Number(userId);
+
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    return null;
+  }
+
+  const user = await prisma.user.findUnique({
     where: {
-      email,
+      id,
     },
     include: {
       player: true,
@@ -47,13 +74,7 @@ export async function login(email: string, password: string) {
   });
 
   if (!user) {
-    throw new Error("Invalid email or password.");
-  }
-
-  const passwordMatches = await bcrypt.compare(password, user.passwordHash);
-
-  if (!passwordMatches) {
-    throw new Error("Invalid email or password.");
+    return null;
   }
 
   return {

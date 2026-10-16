@@ -1,40 +1,42 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { useEffect, useRef, useState } from 'react';
+import { Form, Link, useLocation } from 'react-router';
 import {
   CalendarDays,
   CircleUserRound,
   Film,
   House,
+  LogOut,
   Menu,
   MessageSquare,
   Shield,
   Shuffle,
   X,
-} from "lucide-react";
+} from 'lucide-react';
 
 const menuItems = [
-  { label: "Dashboard", href: "/", icon: House },
-  { label: "Generate Teams", href: "/generate", icon: Shuffle },
-  { label: "Video Highlights", href: null, icon: Film },
-  { label: "Account", href: null, icon: CircleUserRound },
-  { label: "Messages", href: null, icon: MessageSquare },
+  { label: 'Dashboard', href: '/', icon: House },
+  { label: 'Generate Teams', href: '/generate', icon: Shuffle },
+  { label: 'Video Highlights', href: null, icon: Film },
+  { label: 'Account', href: null, icon: CircleUserRound },
+  { label: 'Messages', href: null, icon: MessageSquare },
+  { label: 'Logout', href: '/logout', icon: LogOut },
 ];
 
 export default function SquadHeader() {
   const [open, setOpen] = useState(false);
   const [logoError, setLogoError] = useState(false);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   useEffect(() => {
     setDate(
-      new Date().toLocaleDateString("en-US", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }),
+      new Date().toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
     );
   }, []);
 
@@ -50,17 +52,17 @@ export default function SquadHeader() {
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         setOpen(false);
       }
     }
 
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -71,7 +73,7 @@ export default function SquadHeader() {
           <button
             type="button"
             onClick={() => setOpen((previous) => !previous)}
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="squadhub-menu"
             className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-200 transition hover:bg-white/10 hover:text-white"
@@ -87,8 +89,7 @@ export default function SquadHeader() {
             >
               {menuItems.map((item) => {
                 const Icon = item.icon;
-                const active =
-                  item.href !== null && location.pathname === item.href;
+                const active = item.href !== null && location.pathname === item.href;
 
                 const className = `
                   flex w-full items-center gap-3 rounded-xl
@@ -96,8 +97,8 @@ export default function SquadHeader() {
                   transition-colors
                   ${
                     active
-                      ? "bg-sky-400/10 text-sky-200"
-                      : "text-slate-200 hover:bg-white/[0.07] hover:text-white"
+                      ? 'bg-sky-400/10 text-sky-200'
+                      : 'text-slate-200 hover:bg-white/[0.07] hover:text-white'
                   }
                 `;
 
@@ -106,18 +107,26 @@ export default function SquadHeader() {
                     <Icon size={18} className="shrink-0" />
                     <span className="flex-1">{item.label}</span>
                     {!item.href && (
-                      <span className="text-[10px] font-normal text-slate-500">
-                        Soon
-                      </span>
+                      <span className="text-[10px] font-normal text-slate-500">Soon</span>
                     )}
                   </>
                 );
+
+                if (item.label === 'Logout') {
+                  return (
+                    <Form key={item.label} method="post" action="/logout">
+                      <button type="submit" className={className}>
+                        {content}
+                      </button>
+                    </Form>
+                  );
+                }
 
                 return item.href ? (
                   <Link
                     key={item.label}
                     to={item.href}
-                    aria-current={active ? "page" : undefined}
+                    aria-current={active ? 'page' : undefined}
                     className={className}
                     onClick={() => setOpen(false)}
                   >
@@ -138,10 +147,7 @@ export default function SquadHeader() {
           )}
         </div>
 
-        <Link
-          to="/"
-          className="absolute left-1/2 flex -translate-x-1/2 items-center gap-3"
-        >
+        <Link to="/" className="absolute left-1/2 flex -translate-x-1/2 items-center gap-3">
           {!logoError ? (
             <img
               src="images/squadhub-logo.png"

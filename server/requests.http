@@ -48,6 +48,13 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "alex@example.com",
-  "password": "password123"
+  "email": "alex@test.com",
+  "password": "Test1234"
 }
+
+### Get current user
+GET http://localhost:3000/auth/me
+
+### Get current user with cookie
+GET http://localhost:3000/auth/me
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTIwOTI3NzQsImV4cCI6MTc5MjA5NjM3NCwic3ViIjoiMyJ9.b1m1DHzNzDEiGvnRJ0AFe_O5LufBT0fV8mUjpAx0F1o

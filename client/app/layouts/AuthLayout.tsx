@@ -1,4 +1,30 @@
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, redirect } from 'react-router';
+import type { Route } from './+types/auth-layout';
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const apiUrl = 'http://localhost:3000';
+
+  const response = await fetch(`${apiUrl}/auth/me`, {
+    headers: {
+      Cookie: request.headers.get('Cookie') ?? '',
+    },
+  });
+
+  // Already authenticated: leave the auth pages.
+  if (response.ok) {
+    return redirect('/');
+  }
+
+  // Not authenticated: allow login/register to render.
+  if (response.status === 401) {
+    return null;
+  }
+
+  // Don't silently treat API failures as logged-out users.
+  throw new Response('Unable to verify your session.', {
+    status: 503,
+  });
+}
 
 export default function AuthLayout() {
   return (
